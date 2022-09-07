@@ -41,36 +41,15 @@ public class MainActivity extends AppCompatActivity {
     TextView zero;
     TextView values;
     TextView ans;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
-        clear = findViewById(R.id.clear);
-        cut = findViewById(R.id.cut);
-        percent = findViewById(R.id.percent);
-        divide = findViewById(R.id.divide);
-        multiply = findViewById(R.id.multiply);
-        minus = findViewById(R.id.minus);
-        add = findViewById(R.id.add);
-        equals = findViewById(R.id.equals);
-        pi = findViewById(R.id.pi);
-        decimal = findViewById(R.id.decimal);
-        zero = findViewById(R.id.zero);
-        one = findViewById(R.id.one);
-        two = findViewById(R.id.two);
-        three = findViewById(R.id.three);
-        four = findViewById(R.id.four);
-        five = findViewById(R.id.five);
-        six = findViewById(R.id.six);
-        seven = findViewById(R.id.seven);
-        eight = findViewById(R.id.eight);
-        nine = findViewById(R.id.nine);
-        ans = findViewById(R.id.ans);
-        values = findViewById(R.id.values);
+        initial();
+
+
 
 
 
@@ -89,14 +68,24 @@ public class MainActivity extends AppCompatActivity {
         cut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                err();
+                //code for haptic feedback
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
+
                 calculate = values.getText().toString();
                 try {
-                    calculate = calculate.substring(0,calculate.length()-1);
-                    values.setText(calculate);
+                    if (calculate.equals("error") || calculate.equals("Infinity")){
+                        values.setText("");
+                        ans.setText("0");
+                    }
+                    else {
+                        calculate = calculate.substring(0,calculate.length()-1);
+                        values.setText(calculate);
+                    }
+
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -107,240 +96,225 @@ public class MainActivity extends AppCompatActivity {
         });
         percent.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
-                String btnText = "%";
-                calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                again("%");
+
             }
         });
         divide.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
-                String btnText = "/";
-                calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                again("/");
             }
         });
         add.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
-                String btnText = "+";
-                calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                again("+");
 
             }
         });
         multiply.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
-                String btnText = "X";
-                calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                again("X");
 
             }
         });
         minus.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
-                String btnText = minus.getText().toString();
-                calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                again("‒");
 
             }
         });
         pi.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
                 String btnText = "兀";
                 calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                if ( !(calculate.endsWith("兀") || calculate.endsWith("1")|| calculate.endsWith("2")|| calculate.endsWith("3")|| calculate.endsWith("4")|| calculate.endsWith("5")|| calculate.endsWith("6")|| calculate.endsWith("7")|| calculate.endsWith("8")|| calculate.endsWith("9")|| calculate.endsWith("0")) )
+                {
+                    calculate = calculate+btnText;
+                    values.setText(calculate);
+                }
 
             }
         });
         decimal.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
-                String btnText = ".";
-                calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                boolean dec = true;
+                for (int i = 0;i<calculate.length();i++){
+                    if (calculate.charAt(i)=='+' || calculate.charAt(i)=='‒'|| calculate.charAt(i)=='/' || calculate.charAt(i)=='X'|| calculate.charAt(i)=='%'){
+                        dec = true;
+                    }
+                    else if (calculate.charAt(i)=='.'){
+                        dec = false;
+                    }
+                }
+                if (dec){
+                    again(".");
+                }
 
             }
         });
         zero.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
                 String btnText = zero.getText().toString();
                 calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                infi(btnText);
 
             }
         });
         one.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
                 String btnText = one.getText().toString();
                 calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                infi(btnText);
             }
         });
         two.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
                 String btnText = two.getText().toString();
                 calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                infi(btnText);
             }
         });
         three.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
                 String btnText = three.getText().toString();
                 calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                infi(btnText);
             }
         });
         four.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
                 String btnText = four.getText().toString();
                 calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                infi(btnText);
 
             }
         });
         five.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
                 String btnText = five.getText().toString();
                 calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                infi(btnText);
 
             }
         });
         six.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
                 String btnText = six.getText().toString();
                 calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                infi(btnText);
 
             }
         });
         seven.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
                 String btnText = seven.getText().toString();
                 calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                infi(btnText);
 
             }
         });
         eight.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
                 String btnText = eight.getText().toString();
                 calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
+                infi(btnText);
 
             }
         });
         nine.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                         HapticFeedbackConstants.VIRTUAL_KEY,
                         HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
                 );
-
                 String btnText = nine.getText().toString();
                 calculate = values.getText().toString();
-                calculate = calculate+btnText;
-                values.setText(calculate);
-
+                infi(btnText);
             }
         });
         equals.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {err();
                 equals.performHapticFeedback(
                   HapticFeedbackConstants.VIRTUAL_KEY,
                   HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
@@ -379,6 +353,64 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
     }
+    public void initial(){
+        clear = findViewById(R.id.clear);
+        cut = findViewById(R.id.cut);
+        percent = findViewById(R.id.percent);
+        divide = findViewById(R.id.divide);
+        multiply = findViewById(R.id.multiply);
+        minus = findViewById(R.id.minus);
+        add = findViewById(R.id.add);
+        equals = findViewById(R.id.equals);
+        pi = findViewById(R.id.pi);
+        decimal = findViewById(R.id.decimal);
+        zero = findViewById(R.id.zero);
+        one = findViewById(R.id.one);
+        two = findViewById(R.id.two);
+        three = findViewById(R.id.three);
+        four = findViewById(R.id.four);
+        five = findViewById(R.id.five);
+        six = findViewById(R.id.six);
+        seven = findViewById(R.id.seven);
+        eight = findViewById(R.id.eight);
+        nine = findViewById(R.id.nine);
+        ans = findViewById(R.id.ans);
+        values = findViewById(R.id.values);
+    }
+    public void again(String btnText){
+        calculate = values.getText().toString();
+        if (calculate.equals("Infinity") || calculate.equals("error") ){
+            values.setText("");
+            ans.setText("0");
+
+        }
+        else if ( calculate.endsWith("%") || calculate.endsWith("+") || calculate.endsWith("‒") || calculate.endsWith("/") || calculate.endsWith("X"))
+        {
+            calculate = calculate.substring(0,calculate.length()-1);
+            calculate = calculate+btnText;
+            values.setText(calculate);
+        }
+
+        else {
+            calculate = calculate+btnText;
+            values.setText(calculate);
+        }
+    }
+    public void err(){
+
+    }
+    public void infi(String btnText){
+        if (calculate.equals("Infinity") || calculate.equals("error") ){
+            values.setText("");
+            ans.setText("0");
+        }
+        else {
+            calculate = calculate+btnText;
+            values.setText(calculate);
+        }
+    }
+
 
 }
