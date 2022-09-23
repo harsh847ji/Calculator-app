@@ -1,15 +1,12 @@
 package com.example.clculatorofcreator;
 
 import android.annotation.SuppressLint;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.HapticFeedbackConstants;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,11 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
-        initial();
-
-
-
-
+        initial();//initialising the variables by find view by id
 
         clear.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O_MR1)
